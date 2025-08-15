@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example API Documentation</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #fff;
+}
+
+.sidebar-header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #212529;
+}
+
+#search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#search:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.sidebar-content {
+    padding: 10px 0;
+}
+
+.module {
+    margin-bottom: 5px;
+}
+
+.module-header {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #212529;
+    transition: background-color 0.2s;
+    user-select: none;
+    font-size: 0.95rem;
+}
+
+.module-header:hover {
+    background-color: #e9ecef;
+}
+
+.module-header .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-size: 0.8em;
+}
+
+.module-header.expanded .arrow {
+    transform: rotate(90deg);
+}
+
+.module-content {
+    display: none;
+    padding-left: 10px;
+}
+
+.module-content.show {
+    display: block;
+}
+
+.package {
+    margin-bottom: 5px;
+}
+
+.package-header {
+    padding: 8px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #495057;
+    transition: background-color 0.2s;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.package-header:hover {
+    background-color: #e9ecef;
+}
+
+.package-header .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-size: 0.8em;
+}
+
+.package-header.expanded .arrow {
+    transform: rotate(90deg);
+}
+
+.package-content {
+    display: none;
+    padding-left: 15px;
+}
+
+.package-content.show {
+    display: block;
+}
+
+.class-item {
+    padding: 8px 20px;
+    cursor: pointer;
+    color: #007bff;
+    transition: background-color 0.2s;
+}
+
+.class-item:hover {
+    background-color: #e9ecef;
+    text-decoration: underline;
+}
+
+.class-item.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    background-color: #fff;
+}
+
+.welcome {
+    max-width: 800px;
+}
+
+.welcome h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #212529;
+}
+
+.welcome p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.class-content {
+    max-width: 1000px;
+}
+
+.class-content h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #212529;
+}
+
+.class-content h2 {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #212529;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.class-content h3 {
+    font-size: 1.2rem;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.class-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 4px solid #007bff;
+}
+
+.class-description {
+    margin-bottom: 20px;
+    color: #495057;
+    line-height: 1.6;
+}
+
+.method {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.method-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 15px;
+}
+
+.method-signature {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    border-left: 3px solid #28a745;
+}
+
+.method-description {
+    margin-bottom: 15px;
+    color: #495057;
+    line-height: 1.6;
+}
+
+.method-section {
+    margin-bottom: 15px;
+}
+
+.method-section-title {
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.method-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.method-section li {
+    padding: 5px 0;
+    color: #495057;
+}
+
+.method-section code {
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.annotation {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Example API Documentation</h2>
+            <input type="text" id="search" placeholder="Search..." onkeyup="searchClasses()">
+        </div>
+        <div class="sidebar-content">
+            <div class="module">
+                <div class="module-header" onclick="toggleModule('com_example')">
+                    <span class="arrow">▶</span> com.example
+                </div>
+                <div class="module-content" id="com_example">
+                    <div class="package">
+                        <div class="package-header" onclick="togglePackage('com_example_dto')">
+                            <span class="arrow">▶</span> dto
+                        </div>
+                        <div class="package-content" id="com_example_dto">
+                            <div class="class-item" onclick="showClass('com_example_dto_UserDTO')">
+                                UserDTO
+                            </div>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div class="package-header" onclick="togglePackage('com_example_service')">
+                            <span class="arrow">▶</span> service
+                        </div>
+                        <div class="package-content" id="com_example_service">
+                            <div class="class-item" onclick="showClass('com_example_service_EmailValidator')">
+                                EmailValidator
+                            </div>
+                            <div class="class-item" onclick="showClass('com_example_service_UserService')">
+                                UserService
+                            </div>
+                        </div>
+                    </div>
+                    <div class="package">
+                        <div class="package-header" onclick="togglePackage('com_example_controller')">
+                            <span class="arrow">▶</span> controller
+                        </div>
+                        <div class="package-content" id="com_example_controller">
+                            <div class="class-item" onclick="showClass('com_example_controller_UserController')">
+                                UserController
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="welcome" id="welcome">
+            <h1>Example API Documentation</h1>
+            <p>Generated on: Fri Oct 17 15:38:36 UTC 2025</p>
+            <p>Select a class from the sidebar to view its documentation.</p>
+        </div>
+        <div class="class-content" id="com_example_dto_UserDTO" style="display: none;">
+            <h1>Class: UserDTO</h1>
+            <div class="class-info">
+                <strong>Package:</strong> com.example.dto<br>
+            </div>
+            <div class="class-description">
+                User Data Transfer Object.
+This class should NOT be documented since it has no Spring annotations.
+            </div>
+            <h2>Methods</h2>
+            <div class="method">
+                <div class="method-name">getId</div>
+                <div class="method-signature">String getId()</div>
+                <div class="method-description">Get user ID.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - The user ID
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">setId</div>
+                <div class="method-signature">void setId(String)</div>
+                <div class="method-description">Set user ID.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>id</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>void</code>
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">getUsername</div>
+                <div class="method-signature">String getUsername()</div>
+                <div class="method-description">Get username.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - The username
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">setUsername</div>
+                <div class="method-signature">void setUsername(String)</div>
+                <div class="method-description">Set username.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>username</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>void</code>
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">getEmail</div>
+                <div class="method-signature">String getEmail()</div>
+                <div class="method-description">Get email.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - The email
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">setEmail</div>
+                <div class="method-signature">void setEmail(String)</div>
+                <div class="method-description">Set email.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>email</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>void</code>
+                </div>
+            </div>
+        </div>
+        <div class="class-content" id="com_example_service_EmailValidator" style="display: none;">
+            <h1>Class: EmailValidator</h1>
+            <div class="class-info">
+                <strong>Package:</strong> com.example.service<br>
+                <strong>Annotations:</strong> <span class="annotation">@Component</span>
+            </div>
+            <div class="class-description">
+                Email validation component.
+Provides utility methods for email validation.
+            </div>
+            <h2>Methods</h2>
+            <div class="method">
+                <div class="method-name">isValid</div>
+                <div class="method-signature">boolean isValid(String)</div>
+                <div class="method-description">Validates an email address format.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>email</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>boolean</code> - true if valid, false otherwise
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">normalize</div>
+                <div class="method-signature">String normalize(String)</div>
+                <div class="method-description">Validates and normalizes an email address.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>email</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - Normalized email in lowercase
+                </div>
+            </div>
+        </div>
+        <div class="class-content" id="com_example_service_UserService" style="display: none;">
+            <h1>Class: UserService</h1>
+            <div class="class-info">
+                <strong>Package:</strong> com.example.service<br>
+                <strong>Annotations:</strong> <span class="annotation">@Service</span>
+            </div>
+            <div class="class-description">
+                Example service for user management.
+This is a sample class to demonstrate the documentation generator.
+            </div>
+            <h2>Methods</h2>
+            <div class="method">
+                <div class="method-name">createUser</div>
+                <div class="method-signature">String createUser(String, String)</div>
+                <div class="method-description">Creates a new user in the system.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>username</code> (String)</li>
+                        <li><code>email</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - The created user ID
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">getUser</div>
+                <div class="method-signature">String getUser(String)</div>
+                <div class="method-description">Retrieves a user by their ID.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>userId</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - The user object
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Throws:</div>
+                    <ul>
+                        <li>if userId is null or empty</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="class-content" id="com_example_controller_UserController" style="display: none;">
+            <h1>Class: UserController</h1>
+            <div class="class-info">
+                <strong>Package:</strong> com.example.controller<br>
+                <strong>Annotations:</strong> <span class="annotation">@RestController</span>
+            </div>
+            <div class="class-description">
+                REST controller for user management endpoints.
+Handles HTTP requests related to users.
+            </div>
+            <h2>Methods</h2>
+            <div class="method">
+                <div class="method-name">getUserById</div>
+                <div class="method-signature">String getUserById(String)</div>
+                <div class="method-description">Get user by ID.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>id</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - User details
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">createUser</div>
+                <div class="method-signature">String createUser(String, String)</div>
+                <div class="method-description">Create a new user.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>username</code> (String)</li>
+                        <li><code>email</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - Created user ID
+                </div>
+            </div>
+            <div class="method">
+                <div class="method-name">deleteUser</div>
+                <div class="method-signature">String deleteUser(String)</div>
+                <div class="method-description">Delete a user by ID.</div>
+                <div class="method-section">
+                    <div class="method-section-title">Parameters:</div>
+                    <ul>
+                        <li><code>id</code> (String)</li>
+                    </ul>
+                </div>
+                <div class="method-section">
+                    <div class="method-section-title">Returns:</div>
+                    <code>String</code> - Deletion confirmation message
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+function toggleModule(moduleId) {
+    const content = document.getElementById(moduleId);
+    const header = content.previousElementSibling;
+    
+    if (content.classList.contains('show')) {
+        content.classList.remove('show');
+        header.classList.remove('expanded');
+    } else {
+        content.classList.add('show');
+        header.classList.add('expanded');
+    }
+}
+
+function togglePackage(packageId) {
+    const content = document.getElementById(packageId);
+    const header = content.previousElementSibling;
+    
+    if (content.classList.contains('show')) {
+        content.classList.remove('show');
+        header.classList.remove('expanded');
+    } else {
+        content.classList.add('show');
+        header.classList.add('expanded');
+    }
+}
+
+function showClass(classId) {
+    // Hide welcome message
+    document.getElementById('welcome').style.display = 'none';
+    
+    // Hide all class contents
+    const allClasses = document.querySelectorAll('.class-content');
+    allClasses.forEach(cls => cls.style.display = 'none');
+    
+    // Remove active state from all class items
+    const allItems = document.querySelectorAll('.class-item');
+    allItems.forEach(item => item.classList.remove('active'));
+    
+    // Show selected class
+    const selectedClass = document.getElementById(classId);
+    if (selectedClass) {
+        selectedClass.style.display = 'block';
+        
+        // Add active state to clicked item
+        event.target.classList.add('active');
+        
+        // Scroll to top of main content
+        document.querySelector('.main-content').scrollTop = 0;
+    }
+}
+
+function searchClasses() {
+    const input = document.getElementById('search');
+    const filter = input.value.toLowerCase();
+    const modules = document.querySelectorAll('.module');
+    
+    modules.forEach(module => {
+        const moduleHeader = module.querySelector('.module-header');
+        const packages = module.querySelectorAll('.package');
+        const directClassItems = module.querySelector('.module-content > .class-item');
+        let hasVisibleContent = false;
+        
+        // Check direct class items under module (if any)
+        if (directClassItems) {
+            const moduleClassItems = module.querySelectorAll('.module-content > .class-item');
+            moduleClassItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = 'block';
+                    hasVisibleContent = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // Check packages under module
+        packages.forEach(pkg => {
+            const packageHeader = pkg.querySelector('.package-header');
+            const classItems = pkg.querySelectorAll('.class-item');
+            let hasVisibleClass = false;
+            
+            classItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = 'block';
+                    hasVisibleClass = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Show/hide package based on whether it has visible classes
+            if (hasVisibleClass) {
+                pkg.style.display = 'block';
+                hasVisibleContent = true;
+                // Expand package when searching
+                if (filter !== '') {
+                    pkg.querySelector('.package-content').classList.add('show');
+                    packageHeader.classList.add('expanded');
+                }
+            } else {
+                pkg.style.display = filter === '' ? 'block' : 'none';
+            }
+        });
+        
+        // Show/hide module based on whether it has visible content
+        if (filter === '') {
+            module.style.display = 'block';
+        } else if (hasVisibleContent) {
+            module.style.display = 'block';
+            // Expand module when searching
+            module.querySelector('.module-content').classList.add('show');
+            moduleHeader.classList.add('expanded');
+        } else {
+            module.style.display = 'none';
+        }
+    });
+}
+    </script>
+</body>
+</html>
